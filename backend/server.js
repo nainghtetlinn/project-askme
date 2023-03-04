@@ -5,6 +5,7 @@ const express = require("express");
 const helmet = require("helmet");
 const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/error");
+const userRoutes = require("./routes/user");
 //--------------------------------/
 const app = express();
 const port = process.env.PORT || 5000;
@@ -22,4 +23,5 @@ app.use(helmet());
 app.get("/", (req, res) => {
   res.send("hello");
 });
+app.use("/api/users", userRoutes);
 app.use(errorHandler);
