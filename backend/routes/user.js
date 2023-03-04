@@ -2,8 +2,7 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const { register, login } = require("../controllers/user");
 const router = express.Router();
-/* /api/users/register */
-router.route("/register").post(
+router.use(
   [
     body("username")
       .notEmpty()
@@ -23,9 +22,10 @@ router.route("/register").post(
       throw new Error(errors.array()[0].msg);
     }
     next();
-  },
-  register
+  }
 );
+/* /api/users/register */
+router.route("/register").post(register);
 /* /api/users/login */
 router.route("/login").post(login);
 

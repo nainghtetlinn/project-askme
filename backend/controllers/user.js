@@ -1,5 +1,9 @@
 const asyncHandler = require("express-async-handler");
-const { generateToken, hashPassword } = require("../utils/token");
+const {
+  generateToken,
+  hashPassword,
+  comparePassword,
+} = require("../utils/token");
 const User = require("../models/user");
 
 const register = asyncHandler(async (req, res) => {
@@ -23,6 +27,18 @@ const login = asyncHandler(async (req, res) => {
   if (!user) {
     res.status(404);
     throw new Error("User not found.");
+  }
+  const match = await comparePassword(password, user.password);
+  if (match) {
+    res.status(200);
+    res.json({
+      username,
+      questions: user.questions,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid credentials");
   }
 });
 
