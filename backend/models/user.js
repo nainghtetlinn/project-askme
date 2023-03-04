@@ -14,11 +14,11 @@ const userSchema = new Schema(
     questions: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Questions",
+        ref: "Question",
       },
     ],
   },
   { timestamps: true }
 );
 
-module.exports = model("Users", userSchema);
+module.exports = model("User", userSchema);

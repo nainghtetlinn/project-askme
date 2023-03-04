@@ -17,6 +17,7 @@ const register = asyncHandler(async (req, res) => {
   const user = await User.create({ username, password: hashedPassword });
   res.status(201).json({
     username,
+    _id: user._id,
     token: generateToken(user._id),
   });
 });
@@ -33,6 +34,7 @@ const login = asyncHandler(async (req, res) => {
     res.status(200);
     res.json({
       username,
+      _id: user._id,
       questions: user.questions,
       token: generateToken(user._id),
     });
