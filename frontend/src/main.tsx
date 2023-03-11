@@ -1,10 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { CssBaseline, ThemeProvider, useTheme } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 
 import { ColorModeProvider, useModeContext } from "./context/theme";
+
+const queryClient = new QueryClient();
 
 function Root() {
   const { theme } = useModeContext();
@@ -23,8 +26,10 @@ function Root() {
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   // <React.StrictMode>
-  <ColorModeProvider>
-    <Root />
-  </ColorModeProvider>
+  <QueryClientProvider client={queryClient}>
+    <ColorModeProvider>
+      <Root />
+    </ColorModeProvider>
+  </QueryClientProvider>
   // </React.StrictMode>
 );
