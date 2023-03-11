@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import { BrowserRouter } from "react-router-dom";
 
 import { ColorModeProvider, useModeContext } from "./context/theme";
@@ -30,6 +31,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <ColorModeProvider>
       <Root />
     </ColorModeProvider>
+    <ReactQueryDevtools />
   </QueryClientProvider>
   // </React.StrictMode>
 );

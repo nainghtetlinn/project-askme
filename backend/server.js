@@ -2,6 +2,7 @@ require("colors");
 require("dotenv").config();
 //--------------------------------/
 const express = require("express");
+const cors = require("cors");
 const helmet = require("helmet");
 const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/error");
@@ -17,6 +18,7 @@ connectDB(() => {
   });
 });
 //--------------------------------/
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
