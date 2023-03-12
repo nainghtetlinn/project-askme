@@ -1,22 +1,26 @@
-import { Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
-import { Header } from "./components/globel";
+import { Header, Footer } from "./components/globel";
 import { Home, About } from "./pages";
 
-import { useModeContext } from "./context/theme";
-
 function App() {
-  const { toggleColorMode } = useModeContext();
   return (
     <>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-      <Button variant="contained" onClick={toggleColorMode}>
-        Toggle
-      </Button>
+      <Box
+        sx={{
+          backgroundColor: "#4158D0",
+          backgroundImage:
+            "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
+          minHeight: "100vh",
+        }}
+      >
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+        <Footer />
+      </Box>
     </>
   );
 }

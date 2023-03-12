@@ -10,11 +10,17 @@ import {
   Menu,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useModeContext } from "../../context/theme";
+
 export const Header = () => {
   const navigate = useNavigate();
+  const { toggleColorMode, mode } = useModeContext();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -25,7 +31,14 @@ export const Header = () => {
   };
   return (
     <>
-      <AppBar enableColorOnDark position="fixed">
+      <AppBar
+        position="sticky"
+        sx={{
+          backgroundColor: "#4158D0",
+          backgroundImage:
+            "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
+        }}
+      >
         <Toolbar disableGutters>
           <Container maxWidth="lg">
             <Stack direction="row" alignItems="center">
@@ -68,20 +81,23 @@ export const Header = () => {
                     Login
                   </Button>
                 </Stack>
-                <IconButton
-                  sx={{ display: { md: "none" } }}
-                  color="inherit"
-                  size="small"
-                  onClick={handleClick}
-                >
-                  <MenuIcon />
-                </IconButton>
+                <Stack direction="row" alignItems="center" spacing={1}>
+                  <IconButton color="inherit" onClick={toggleColorMode}>
+                    {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
+                  </IconButton>
+                  <IconButton
+                    sx={{ display: { md: "none" } }}
+                    color="inherit"
+                    onClick={handleClick}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                </Stack>
               </Stack>
             </Stack>
           </Container>
         </Toolbar>
       </AppBar>
-      <Toolbar />
       <Menu
         anchorEl={anchorEl}
         open={open}
