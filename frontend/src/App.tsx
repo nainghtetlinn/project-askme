@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 import { Header, Footer } from "./components/globel";
-import { Home, About } from "./pages";
+import { Home, About, Signup } from "./pages";
 
 function App() {
   return (
@@ -18,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="signup" element={<Signup />} />
         </Routes>
         <Footer />
       </Box>
