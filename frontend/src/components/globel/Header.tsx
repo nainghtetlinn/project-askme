@@ -17,10 +17,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useModeContext } from "../../context/theme";
+import { useUserContext } from "../../context/user";
 
 export const Header = () => {
   const navigate = useNavigate();
   const { toggleColorMode, mode } = useModeContext();
+  const { token, logout } = useUserContext();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -64,22 +66,37 @@ export const Header = () => {
                   >
                     About
                   </Button>
-                  <Button
-                    sx={{ display: { xs: "none", md: "block" } }}
-                    onClick={() => navigate("/signup")}
-                    color="inherit"
-                    size="small"
-                  >
-                    Signup
-                  </Button>
-                  <Button
-                    sx={{ display: { xs: "none", md: "block" } }}
-                    onClick={() => navigate("/login")}
-                    color="inherit"
-                    size="small"
-                  >
-                    Login
-                  </Button>
+                  {token ? (
+                    <>
+                      <Button
+                        sx={{ display: { xs: "none", md: "block" } }}
+                        onClick={logout}
+                        color="inherit"
+                        size="small"
+                      >
+                        Logout
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        sx={{ display: { xs: "none", md: "block" } }}
+                        onClick={() => navigate("/signup")}
+                        color="inherit"
+                        size="small"
+                      >
+                        Signup
+                      </Button>
+                      <Button
+                        sx={{ display: { xs: "none", md: "block" } }}
+                        onClick={() => navigate("/login")}
+                        color="inherit"
+                        size="small"
+                      >
+                        Login
+                      </Button>
+                    </>
+                  )}
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={1}>
                   <IconButton color="inherit" onClick={toggleColorMode}>
@@ -106,8 +123,13 @@ export const Header = () => {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
       >
-        <MenuItem onClick={() => navigate("/signup")}>Signup</MenuItem>
-        <MenuItem onClick={() => navigate("/login")}>Login</MenuItem>
+        {token && <MenuItem onClick={logout}>Logout</MenuItem>}
+        {!token && (
+          <MenuItem onClick={() => navigate("/signup")}>Signup</MenuItem>
+        )}
+        {!token && (
+          <MenuItem onClick={() => navigate("/login")}>Login</MenuItem>
+        )}
       </Menu>
     </>
   );

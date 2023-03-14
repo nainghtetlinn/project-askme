@@ -9,6 +9,7 @@ const UserContext = createContext<any>({
   login: (username: string, password: string) => {},
   signup: (username: string, password: string) => {},
   loginwithtoken: (token: string) => {},
+  logout: () => {},
 });
 
 export const UserContextProvider = ({
@@ -40,10 +41,15 @@ export const UserContextProvider = ({
     localStorage.setItem("token", data.token);
     return data;
   };
+  const logout = () => {
+    setUsername("");
+    setToken("");
+    localStorage.removeItem("token");
+  };
 
   return (
     <UserContext.Provider
-      value={{ username, token, login, signup, loginwithtoken }}
+      value={{ username, token, login, signup, loginwithtoken, logout }}
     >
       {children}
     </UserContext.Provider>
