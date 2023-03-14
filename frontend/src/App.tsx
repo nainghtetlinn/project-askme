@@ -1,13 +1,20 @@
 import { Box } from "@mui/material";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
 import { Header, Footer, Noti } from "./components/globel";
 import { Home, About, Signup, Login } from "./pages";
 
 import { useUserContext } from "./context/user";
 
+const usertoken = localStorage.getItem("token");
+
 function App() {
-  const { username, token } = useUserContext();
-  console.log(username, token);
+  const { username, token, loginwithtoken } = useUserContext();
+
+  useEffect(() => {
+    if (usertoken) loginwithtoken(token);
+  }, []);
+
   return (
     <>
       <Noti />
@@ -21,11 +28,14 @@ function App() {
       >
         <Header />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={!token ? <Home /> : <Navigate to={`/${username}`} />}
+          />
           <Route path="/about" element={<About />} />
-          <Route path="signup" element={<Signup />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path=":user" element={<div>hello</div>} />
+          <Route path="/:user" element={<div>hello</div>} />
         </Routes>
         <Footer />
       </Box>

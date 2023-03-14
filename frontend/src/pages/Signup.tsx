@@ -11,11 +11,15 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { validateForm } from "../validation";
 import { useNotiContext } from "../context/noti";
+import { useUserContext } from "../context/user";
 
 export const Signup = () => {
+  const navigate = useNavigate();
   const { showNoti } = useNotiContext();
+  const { signup } = useUserContext();
   const [show, setShow] = useState<boolean>(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +29,7 @@ export const Signup = () => {
     msg: "",
   });
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     setErr({ path: "", msg: "" });
     if (password !== confirm)
       return setErr({ path: "confirm", msg: "Password didn't match." });
@@ -38,7 +42,12 @@ export const Signup = () => {
       showNoti({ msg: "hello", type: "error" });
       return;
     }
-    console.log(value);
+    try {
+      const data = await signup(username, password);
+      navigate(data.username);
+    } catch (error: any) {
+      showNoti({ type: "error", msg: error?.response?.data?.message });
+    }
   };
   return (
     <>
