@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const {
   generateToken,
+  decodeToken,
   hashPassword,
   comparePassword,
 } = require("../utils/token");
@@ -44,4 +45,19 @@ const login = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { register, login };
+const loginToken = asyncHandler(async (req, res) => {
+  const token = req.params.token;
+  const { id } = decodeToken(token);
+  const user = await User.findById(id);
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found.");
+  }
+  res.status(200).json({
+    username: user.username,
+    _id: user._id,
+    token: generateToken(user._id),
+  });
+});
+
+module.exports = { register, login, loginToken };
