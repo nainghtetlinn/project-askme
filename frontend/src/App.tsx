@@ -1,11 +1,16 @@
 import { Box } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
-import { Header, Footer } from "./components/globel";
-import { Home, About, Signup } from "./pages";
+import { Header, Footer, Noti } from "./components/globel";
+import { Home, About, Signup, Login } from "./pages";
+
+import { useUserContext } from "./context/user";
 
 function App() {
+  const { username, token } = useUserContext();
+  console.log(username, token);
   return (
     <>
+      <Noti />
       <Box
         sx={{
           backgroundColor: "#4158D0",
@@ -19,6 +24,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path=":user" element={<div>hello</div>} />
         </Routes>
         <Footer />
       </Box>

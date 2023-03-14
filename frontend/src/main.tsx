@@ -7,6 +7,8 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { BrowserRouter } from "react-router-dom";
 
 import { ColorModeProvider, useModeContext } from "./context/theme";
+import { NotiContextProvider } from "./context/noti";
+import { UserContextProvider } from "./context/user";
 
 const queryClient = new QueryClient();
 
@@ -28,9 +30,13 @@ function Root() {
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   // <React.StrictMode>
   <QueryClientProvider client={queryClient}>
-    <ColorModeProvider>
-      <Root />
-    </ColorModeProvider>
+    <UserContextProvider>
+      <ColorModeProvider>
+        <NotiContextProvider>
+          <Root />
+        </NotiContextProvider>
+      </ColorModeProvider>
+    </UserContextProvider>
     <ReactQueryDevtools />
   </QueryClientProvider>
   // </React.StrictMode>
