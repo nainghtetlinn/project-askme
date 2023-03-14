@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect, useContext, createContext } from "react";
+import { useState, useContext, createContext } from "react";
 
 const user = axios.create({ baseURL: "http://localhost:5000/api/users" });
 
@@ -23,24 +23,23 @@ export const UserContextProvider = ({
     const { data } = await user.post("/login", { username, password });
     setUsername(data.username);
     setToken(data.token);
+    localStorage.setItem("token", data.token);
     return data;
   };
   const signup = async (username: string, password: string) => {
     const { data } = await user.post("/register", { username, password });
     setUsername(data.username);
     setToken(data.token);
+    localStorage.setItem("token", data.token);
     return data;
   };
   const loginwithtoken = async (token: string) => {
     const { data } = await user.get(`/token/${token}`);
     setUsername(data.username);
     setToken(data.token);
+    localStorage.setItem("token", data.token);
     return data;
   };
-
-  useEffect(() => {
-    localStorage.setItem("token", token);
-  }, [token]);
 
   return (
     <UserContext.Provider

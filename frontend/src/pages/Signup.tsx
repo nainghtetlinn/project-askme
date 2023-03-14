@@ -44,7 +44,7 @@ export const Signup = () => {
     }
     try {
       const data = await signup(username, password);
-      navigate(data.username);
+      navigate(`/${data.username}`);
     } catch (error: any) {
       showNoti({ type: "error", msg: error?.response?.data?.message });
     }

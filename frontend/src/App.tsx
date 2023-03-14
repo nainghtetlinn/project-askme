@@ -12,7 +12,12 @@ function App() {
   const { username, token, loginwithtoken } = useUserContext();
 
   useEffect(() => {
-    if (usertoken) loginwithtoken(token);
+    const lwt = async () => {
+      if (usertoken) {
+        await loginwithtoken(usertoken);
+      }
+    };
+    lwt();
   }, []);
 
   return (

@@ -41,7 +41,7 @@ export const Login = () => {
 
     try {
       const data = await login(username, password);
-      navigate(data.username);
+      navigate(`/${data.username}`);
     } catch (error: any) {
       showNoti({ type: "error", msg: error?.response?.data?.message });
     }
