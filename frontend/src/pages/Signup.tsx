@@ -39,7 +39,6 @@ export const Signup = () => {
         path: error.details[0].path[0].toString(),
         msg: error.details[0].message,
       });
-      showNoti({ msg: "hello", type: "error" });
       return;
     }
     try {

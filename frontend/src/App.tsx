@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Header, Footer, Noti } from "./components/globel";
 import { Home, About, Signup, Login } from "./pages";
@@ -9,17 +9,16 @@ import { useUserContext } from "./context/user";
 const usertoken = localStorage.getItem("token");
 
 function App() {
-  const navigate = useNavigate();
-  const { username, token, loginwithtoken } = useUserContext();
-
-  useEffect(() => {
-    if (!token) navigate("/");
-  }, [token]);
+  const { username, isLogin, loginwithtoken } = useUserContext();
 
   useEffect(() => {
     const lwt = async () => {
       if (usertoken) {
-        await loginwithtoken(usertoken);
+        try {
+          const data = await loginwithtoken(usertoken);
+        } catch (error) {
+          localStorage.removeItem("token");
+        }
       }
     };
     lwt();
@@ -40,7 +39,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={!token ? <Home /> : <Navigate to={`/${username}`} />}
+            element={!isLogin ? <Home /> : <Navigate to={`/${username}`} />}
           />
           <Route path="/about" element={<About />} />
           <Route path="/signup" element={<Signup />} />

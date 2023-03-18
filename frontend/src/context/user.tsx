@@ -6,6 +6,7 @@ const user = axios.create({ baseURL: "http://localhost:5000/api/users" });
 const UserContext = createContext<any>({
   username: "",
   token: "",
+  isLogin: false,
   login: (username: string, password: string) => {},
   signup: (username: string, password: string) => {},
   loginwithtoken: (token: string) => {},
@@ -19,37 +20,48 @@ export const UserContextProvider = ({
 }) => {
   const [username, setUsername] = useState<string>("");
   const [token, setToken] = useState<string>("");
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+
+  const successfn = (data: any) => {
+    setUsername(data.username);
+    setToken(data.token);
+    setIsLogin(true);
+    localStorage.setItem("token", data.token);
+  };
 
   const login = async (username: string, password: string) => {
     const { data } = await user.post("/login", { username, password });
-    setUsername(data.username);
-    setToken(data.token);
-    localStorage.setItem("token", data.token);
+    successfn(data);
     return data;
   };
   const signup = async (username: string, password: string) => {
     const { data } = await user.post("/register", { username, password });
-    setUsername(data.username);
-    setToken(data.token);
-    localStorage.setItem("token", data.token);
+    successfn(data);
     return data;
   };
   const loginwithtoken = async (token: string) => {
     const { data } = await user.get(`/token/${token}`);
-    setUsername(data.username);
-    setToken(data.token);
-    localStorage.setItem("token", data.token);
+    successfn(data);
     return data;
   };
   const logout = () => {
     setUsername("");
     setToken("");
+    setIsLogin(false);
     localStorage.removeItem("token");
   };
 
   return (
     <UserContext.Provider
-      value={{ username, token, login, signup, loginwithtoken, logout }}
+      value={{
+        username,
+        token,
+        isLogin,
+        login,
+        signup,
+        loginwithtoken,
+        logout,
+      }}
     >
       {children}
     </UserContext.Provider>
