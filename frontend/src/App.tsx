@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Header, Footer, Noti } from "./components/globel";
-import { Home, About, Signup, Login } from "./pages";
+import { Home, About, Signup, Login, Profile } from "./pages";
 
 import { useUserContext } from "./context/user";
 
@@ -44,7 +44,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/:user" element={<div>hello</div>} />
+          <Route path="/:user" element={<Profile />} />
         </Routes>
         <Footer />
       </Box>
