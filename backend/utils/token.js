@@ -12,8 +12,5 @@ const comparePassword = async (pw, hp) => {
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
-const decodeToken = (token) => {
-  return jwt.verify(token, process.env.JWT_SECRET);
-};
 
-module.exports = { generateToken, decodeToken, hashPassword, comparePassword };
+module.exports = { generateToken, hashPassword, comparePassword };

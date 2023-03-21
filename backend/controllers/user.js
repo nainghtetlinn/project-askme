@@ -1,7 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const {
   generateToken,
-  decodeToken,
   hashPassword,
   comparePassword,
 } = require("../utils/token");
@@ -10,33 +9,22 @@ const User = require("../models/user");
 const register = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await hashPassword(password);
-  const u = await User.findOne({ username });
-  if (u) {
-    res.status(400);
-    throw new Error("User already exists.");
-  }
   const user = await User.create({ username, password: hashedPassword });
   res.status(201).json({
-    username,
+    username: user.username,
     _id: user._id,
     token: generateToken(user._id),
   });
 });
 
 const login = asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
-  if (!user) {
-    res.status(404);
-    throw new Error("User not found.");
-  }
-  const match = await comparePassword(password, user.password);
+  const user = req.user;
+  const match = await comparePassword(req.body.password, user.password);
   if (match) {
     res.status(200);
     res.json({
-      username,
+      username: user.username,
       _id: user._id,
-      questions: user.questions,
       token: generateToken(user._id),
     });
   } else {
@@ -46,9 +34,7 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const loginToken = asyncHandler(async (req, res) => {
-  const token = req.params.token;
-  const { id } = decodeToken(token);
-  const user = await User.findById(id);
+  const user = req.user;
   if (!user) {
     res.status(404);
     throw new Error("User not found.");
@@ -61,13 +47,13 @@ const loginToken = asyncHandler(async (req, res) => {
 });
 
 const findUser = asyncHandler(async (req, res) => {
-  user = req.query.user;
-  const userProfile = await User.findOne({ username: user });
-  if (!userProfile) {
+  const username = req.params.username;
+  const user = await User.findOne({ username: username });
+  if (!user) {
     res.status(404);
     throw new Error("User not found.");
   }
-  res.status(200).json({ username: userProfile.username });
+  res.status(200).json({ username: user.username });
 });
 
 module.exports = { register, login, loginToken, findUser };

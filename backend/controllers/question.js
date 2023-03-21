@@ -3,8 +3,8 @@ const Question = require("../models/question");
 const User = require("../models/user");
 
 const postQuestion = asyncHandler(async (req, res) => {
-  const userId = req.params.id;
-  const user = await User.findById(userId).select("questions");
+  const username = req.params.username;
+  const user = await User.findOne({ username: username });
   if (!user) {
     res.status(404);
     throw new Error("User not found.");
@@ -15,24 +15,17 @@ const postQuestion = asyncHandler(async (req, res) => {
   });
   user.questions.push(question._id);
   user.save();
-  res.status(200);
-  res.json(question);
+  res.status(200).json({ title: question.title });
 });
 
-const answerQuestion = asyncHandler(async (req, res) => {
-  const questionId = req.params.id;
-  const question = await Question.findById(questionId);
-  if (!question) {
+const getQuestions = asyncHandler(async (req, res) => {
+  const user = req.user;
+  if (!user) {
     res.status(404);
-    throw new Error("Question not found.");
+    throw new Error("User not found.");
   }
-  if (question.userId.toString() !== req.user._id.toString()) {
-    res.status(401);
-    throw new Error("Unauthorized.");
-  }
-  question.answer = req.body.answer;
-  question.save();
-  res.status(200).json(question);
+  const questions = await Question.find({ userId: user._id });
+  res.status(200).json(questions);
 });
 
-module.exports = { postQuestion, answerQuestion };
+module.exports = { postQuestion, getQuestions };
