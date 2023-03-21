@@ -1,4 +1,11 @@
-import { Container, Paper, Stack } from "@mui/material";
+import {
+  Container,
+  Paper,
+  Stack,
+  TextField,
+  Button,
+  Typography,
+} from "@mui/material";
 import { useParams } from "react-router";
 import { useUserContext } from "../context/user";
 import { AskQuestionBox } from "../components/profile";
@@ -8,10 +15,33 @@ const msg = ["hello", "hi", "my name is naing"];
 export const Profile = () => {
   const { user } = useParams();
   const { username } = useUserContext();
+  const url = window.location.href;
   return (
     <>
-      <Container maxWidth="lg" sx={{ pt: 4, minHeight: "100vh" }}>
+      <Container maxWidth="xs" sx={{ pt: 4, minHeight: "100vh" }}>
         {username !== user && <AskQuestionBox user={user} />}
+        {username === user && (
+          <>
+            <Paper sx={{ p: 2, mb: 2 }}>
+              <Stack
+                direction="row"
+                spacing={1}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <TextField label="URL" value={url} />
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    navigator.clipboard.writeText(url);
+                  }}
+                >
+                  Copy
+                </Button>
+              </Stack>
+            </Paper>
+          </>
+        )}
         {username === user && (
           <Stack direction="column" spacing={2}>
             {msg.map((m, i) => {
