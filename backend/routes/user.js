@@ -1,7 +1,14 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
-const { register, login, loginToken } = require("../controllers/user");
+const {
+  register,
+  login,
+  loginToken,
+  findUser,
+} = require("../controllers/user");
 const router = express.Router();
+/* /api/users/find?user=someone */
+router.route("/find").get(findUser);
 /* /api/users/token/:token */
 router.route("/token/:token").get(loginToken);
 

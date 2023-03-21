@@ -60,4 +60,14 @@ const loginToken = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { register, login, loginToken };
+const findUser = asyncHandler(async (req, res) => {
+  user = req.query.user;
+  const userProfile = await User.findOne({ username: user });
+  if (!userProfile) {
+    res.status(404);
+    throw new Error("User not found.");
+  }
+  res.status(200).json({ username: userProfile.username });
+});
+
+module.exports = { register, login, loginToken, findUser };

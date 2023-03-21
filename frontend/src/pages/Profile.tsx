@@ -6,7 +6,8 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { useParams } from "react-router";
+import { useLayoutEffect } from "react";
+import { useParams, useNavigate } from "react-router";
 import { useUserContext } from "../context/user";
 import { AskQuestionBox } from "../components/profile";
 import { getbg } from "../assets/bgs";
@@ -14,8 +15,19 @@ import { getbg } from "../assets/bgs";
 const msg = ["hello", "hi", "my name is naing"];
 export const Profile = () => {
   const { user } = useParams();
-  const { username } = useUserContext();
+  const navigate = useNavigate();
+  const { username, findUser } = useUserContext();
   const url = window.location.href;
+  useLayoutEffect(() => {
+    const cb = async () => {
+      try {
+        const data = await findUser(user);
+      } catch (error) {
+        navigate("/");
+      }
+    };
+    cb();
+  }, []);
   return (
     <>
       <Container maxWidth="xs" sx={{ pt: 4, minHeight: "100vh" }}>

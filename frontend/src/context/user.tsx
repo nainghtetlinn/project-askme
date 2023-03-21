@@ -11,6 +11,7 @@ const UserContext = createContext<any>({
   signup: (username: string, password: string) => {},
   loginwithtoken: (token: string) => {},
   logout: () => {},
+  findUser: (username: string) => {},
 });
 
 export const UserContextProvider = ({
@@ -50,6 +51,10 @@ export const UserContextProvider = ({
     setIsLogin(false);
     localStorage.removeItem("token");
   };
+  const findUser = async (username: string) => {
+    const { data } = await user.get(`/find?user=${username}`);
+    return data;
+  };
 
   return (
     <UserContext.Provider
@@ -61,6 +66,7 @@ export const UserContextProvider = ({
         signup,
         loginwithtoken,
         logout,
+        findUser,
       }}
     >
       {children}
