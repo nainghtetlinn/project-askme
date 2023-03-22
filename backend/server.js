@@ -2,6 +2,7 @@ require("colors");
 require("dotenv").config();
 //--------------------------------/
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const helmet = require("helmet");
 const connectDB = require("./config/db");
@@ -23,9 +24,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
 //--------------------------------/
-app.get("/", (req, res) => {
-  res.send("hello");
-});
 app.use("/api/users", userRoutes);
 app.use("/api/questions", questionRoutes);
+
+// Serve frontend
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(
+      path.resolve(__dirname, "../", "frontend", "dist", "index.html")
+    )
+  );
+} else {
+  app.get("/", (req, res) => res.send("Please set to production"));
+}
+
 app.use(errorHandler);
