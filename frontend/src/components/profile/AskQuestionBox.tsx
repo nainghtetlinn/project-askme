@@ -8,18 +8,30 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useNotiContext } from "../../context/noti";
+import { questionInstance } from "../../requests";
 
 type Props = { user?: string };
 
 export const AskQuestionBox = ({ user }: Props) => {
   const { showNoti } = useNotiContext();
+  const navigate = useNavigate();
   const [question, setQuestion] = useState("");
   const handleAsk = () => {
     if (!question) {
       return showNoti({ type: "error", msg: "Message required" });
     }
-    console.log(question);
+    questionInstance
+      .post(`/${user}`, {
+        question: question,
+      })
+      .then((res) => {
+        navigate("/success");
+      })
+      .catch((err) => {
+        showNoti({ type: "error", msg: "Something went wrong." });
+      });
   };
   return (
     <Paper>

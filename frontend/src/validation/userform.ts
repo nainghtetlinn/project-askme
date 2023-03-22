@@ -3,7 +3,7 @@ import Joi from "joi";
 export const validateForm = (username: string, password: string) => {
   return Joi.object({
     username: Joi.string()
-      .min(5)
+      .min(10)
       .required()
       .error((errors: any) => {
         errors.forEach((err: Joi.ErrorReport) => {

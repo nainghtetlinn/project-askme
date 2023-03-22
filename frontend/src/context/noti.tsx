@@ -32,7 +32,7 @@ export const NotiContextProvider = ({
     type?: "info" | "error" | "success" | any;
   }) => {
     setShow(true);
-    setMsg(msg);
+    setMsg(msg || "Something went wrong.");
     setType(types.includes(type) ? type : "info");
   };
   const hideNoti = () => {

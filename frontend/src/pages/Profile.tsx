@@ -1,23 +1,26 @@
-import {
-  Container,
-  Paper,
-  Stack,
-  TextField,
-  Button,
-  Typography,
-} from "@mui/material";
+import { Container, Paper, Stack } from "@mui/material";
 import { useLayoutEffect } from "react";
 import { useParams, useNavigate } from "react-router";
-import { useUserContext } from "../context/user";
-import { AskQuestionBox } from "../components/profile";
-import { getbg } from "../assets/bgs";
+import { useQuery } from "react-query";
 
-const msg = ["hello", "hi", "my name is naing"];
+import { useUserContext } from "../context/user";
+import { getbgandtext } from "../utils/bg";
+import { questionInstance } from "../requests";
+import { AskQuestionBox, CopyUrlBox } from "../components/profile";
+
 export const Profile = () => {
   const { user } = useParams();
   const navigate = useNavigate();
   const { username, findUser } = useUserContext();
-  const url = window.location.href;
+  const { data } = useQuery(
+    "questions",
+    () => {
+      return questionInstance.get("/", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+    },
+    { refetchOnWindowFocus: false, enabled: user === username }
+  );
   useLayoutEffect(() => {
     const cb = async () => {
       try {
@@ -32,47 +35,24 @@ export const Profile = () => {
     <>
       <Container maxWidth="xs" sx={{ pt: 4, minHeight: "100vh" }}>
         {username !== user && <AskQuestionBox user={user} />}
-        {username === user && (
-          <>
-            <Paper sx={{ p: 2, mb: 2 }}>
-              <Stack
-                direction="row"
-                spacing={1}
-                justifyContent="center"
-                alignItems="center"
-              >
-                <TextField label="URL" value={url} />
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    navigator.clipboard.writeText(url);
-                  }}
-                >
-                  Copy
-                </Button>
-              </Stack>
-            </Paper>
-          </>
-        )}
-        {username === user && (
+        {username === user && <CopyUrlBox />}
+        {username !== user ? null : (
           <Stack direction="column" spacing={2}>
-            {msg.map((m, i) => {
-              const bg = getbg();
+            {data?.data.map((m: any) => {
+              const bgandtext = getbgandtext();
               return (
                 <Paper
-                  key={i}
+                  key={m._id}
                   sx={{
                     fontSize: "18px",
                     minHeight: "150px",
-                    p: 1,
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: bg.backgroundColor,
-                    backgroundImage: bg.backgroundImage,
+                    ...bgandtext,
                   }}
                 >
-                  {m}
+                  {m.title}
                 </Paper>
               );
             })}

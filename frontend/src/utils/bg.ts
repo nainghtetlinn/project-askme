@@ -46,12 +46,47 @@ const bgs = [
 
 let last = 0;
 
-export const getbg = () => {
-  const random = Math.floor(Math.random() * bgs.length);
+export const getbgandtext = () => {
+  let random = Math.floor(Math.random() * bgs.length);
   if (random === last) {
-    last = random + 1;
-    return bgs[random + 1];
+    random++;
   }
   last = random;
-  return bgs[random];
+  const bg = bgs[random];
+  const text = getTextColor(bg.backgroundColor);
+  return {
+    ...bg,
+    color: text,
+  };
 };
+
+function getRGB(c: any) {
+  return parseInt(c, 16) || c;
+}
+
+function getsRGB(c: any) {
+  return getRGB(c) / 255 <= 0.03928
+    ? getRGB(c) / 255 / 12.92
+    : Math.pow((getRGB(c) / 255 + 0.055) / 1.055, 2.4);
+}
+
+function getLuminance(hexColor: any) {
+  return (
+    0.2126 * getsRGB(hexColor.substr(1, 2)) +
+    0.7152 * getsRGB(hexColor.substr(3, 2)) +
+    0.0722 * getsRGB(hexColor.substr(-2))
+  );
+}
+
+function getContrast(f: string, b: string) {
+  const L1 = getLuminance(f);
+  const L2 = getLuminance(b);
+  return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+}
+
+function getTextColor(bgColor: string) {
+  const whiteContrast = getContrast(bgColor, "#ffffff");
+  const blackContrast = getContrast(bgColor, "#000000");
+
+  return whiteContrast > blackContrast ? "#ffffff" : "#000000";
+}

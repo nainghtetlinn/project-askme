@@ -22,7 +22,7 @@ import { useUserContext } from "../../context/user";
 export const Header = () => {
   const navigate = useNavigate();
   const { toggleColorMode, mode } = useModeContext();
-  const { token, logout } = useUserContext();
+  const { isLogin, logout } = useUserContext();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -30,6 +30,10 @@ export const Header = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleLogout = () => {
+    logout();
+    navigate("/");
   };
   return (
     <>
@@ -43,73 +47,68 @@ export const Header = () => {
       >
         <Toolbar disableGutters>
           <Container maxWidth="lg">
-            <Stack direction="row" alignItems="center">
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
               <Typography variant="h5">Askme</Typography>
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent={{ xs: "space-between", md: "right" }}
-                sx={{ width: "100%", ml: 1 }}
-              >
-                <Stack direction="row" alignItems="center">
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Button
+                  onClick={() => navigate("/")}
+                  color="inherit"
+                  size="small"
+                >
+                  Home
+                </Button>
+                <Button
+                  onClick={() => navigate("/about")}
+                  color="inherit"
+                  size="small"
+                >
+                  About
+                </Button>
+                {isLogin && (
                   <Button
-                    onClick={() => navigate("/")}
+                    sx={{ display: { xs: "none", md: "block" } }}
+                    onClick={handleLogout}
                     color="inherit"
                     size="small"
                   >
-                    Home
+                    Logout
                   </Button>
+                )}
+                {!isLogin && (
                   <Button
-                    onClick={() => navigate("/about")}
+                    sx={{ display: { xs: "none", md: "block" } }}
+                    onClick={() => navigate("/signup")}
                     color="inherit"
                     size="small"
                   >
-                    About
+                    Signup
                   </Button>
-                  {token ? (
-                    <>
-                      <Button
-                        sx={{ display: { xs: "none", md: "block" } }}
-                        onClick={logout}
-                        color="inherit"
-                        size="small"
-                      >
-                        Logout
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        sx={{ display: { xs: "none", md: "block" } }}
-                        onClick={() => navigate("/signup")}
-                        color="inherit"
-                        size="small"
-                      >
-                        Signup
-                      </Button>
-                      <Button
-                        sx={{ display: { xs: "none", md: "block" } }}
-                        onClick={() => navigate("/login")}
-                        color="inherit"
-                        size="small"
-                      >
-                        Login
-                      </Button>
-                    </>
-                  )}
-                </Stack>
-                <Stack direction="row" alignItems="center" spacing={1}>
-                  <IconButton color="inherit" onClick={toggleColorMode}>
-                    {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
-                  </IconButton>
-                  <IconButton
-                    sx={{ display: { md: "none" } }}
+                )}
+                {!isLogin && (
+                  <Button
+                    sx={{ display: { xs: "none", md: "block" } }}
+                    onClick={() => navigate("/login")}
                     color="inherit"
-                    onClick={handleClick}
+                    size="small"
                   >
-                    <MenuIcon />
-                  </IconButton>
-                </Stack>
+                    Login
+                  </Button>
+                )}
+
+                <IconButton color="inherit" onClick={toggleColorMode}>
+                  {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
+                </IconButton>
+                <IconButton
+                  sx={{ display: { md: "none" } }}
+                  color="inherit"
+                  onClick={handleClick}
+                >
+                  <MenuIcon />
+                </IconButton>
               </Stack>
             </Stack>
           </Container>
@@ -123,11 +122,11 @@ export const Header = () => {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
       >
-        {token && <MenuItem onClick={logout}>Logout</MenuItem>}
-        {!token && (
+        {isLogin && <MenuItem onClick={handleLogout}>Logout</MenuItem>}
+        {!isLogin && (
           <MenuItem onClick={() => navigate("/signup")}>Signup</MenuItem>
         )}
-        {!token && (
+        {!isLogin && (
           <MenuItem onClick={() => navigate("/login")}>Login</MenuItem>
         )}
       </Menu>

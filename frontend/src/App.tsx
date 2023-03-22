@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { Header, Footer, Noti } from "./components/globel";
-import { Home, About, Signup, Login, Profile } from "./pages";
+import { Home, About, Signup, Login, Profile, Success } from "./pages";
 
 import { useUserContext } from "./context/user";
 
@@ -11,7 +11,7 @@ const usertoken = localStorage.getItem("token");
 function App() {
   const { username, isLogin, loginwithtoken } = useUserContext();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const lwt = async () => {
       if (usertoken) {
         try {
@@ -44,6 +44,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/success" element={<Success />} />
           <Route path="/:user" element={<Profile />} />
         </Routes>
         <Footer />
