@@ -18,7 +18,7 @@ connectDB(() => {
   });
 });
 //--------------------------------/
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: "https://askme-anonymously.netlify.app" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
