@@ -44,6 +44,7 @@ export const Profile = () => {
                 <Paper
                   key={m._id}
                   sx={{
+                    p: 1,
                     fontSize: "18px",
                     minHeight: "150px",
                     display: "flex",
