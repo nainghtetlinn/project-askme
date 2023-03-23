@@ -2,7 +2,15 @@ import { Box } from "@mui/material";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useLayoutEffect } from "react";
 import { Header, Footer, Noti } from "./components/globel";
-import { Home, About, Signup, Login, Profile, Success } from "./pages";
+import {
+  Home,
+  About,
+  Signup,
+  Login,
+  Profile,
+  Success,
+  NotFound,
+} from "./pages";
 
 import { useUserContext } from "./context/user";
 
@@ -46,6 +54,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/success" element={<Success />} />
           <Route path="/:user" element={<Profile />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </Box>
